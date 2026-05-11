@@ -1,0 +1,951 @@
+%6
+%30CS 455, FA'25 Software Design Document template
+% Software design template based on the template from
+% https://tex.stackexchange.com/questions/42602/software-requirements-specification-with-latex
+%
+\documentclass[letterpaper,12pt,oneside,listof=totoc,parskip=full]{scrreprt}
+\usepackage{listings}
+\usepackage{underscore}
+\usepackage{graphicx}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{longtable}  % Added by Shelby
+\usepackage{float} % Added by Alli
+\usepackage[export]{adjustbox} % Added by Brandon for Chart Display
+\usepackage{caption}
+
+\hypersetup{
+%    bookmarks=false,                                % show bookmarks bar
+    pdftitle={Software Design Document}, % title
+%    pdfauthor={Yiannis Lazarides},                  % author
+%    pdfsubject={TeX and LaTeX},                     % subject of the document
+%    pdfkeywords={TeX, LaTeX, graphics, images},     % list of keywords
+    colorlinks=true,                                % false: boxed links; true: colored links
+    linkcolor=blue,                                 % color of internal links
+    citecolor=black,                                % color of links to bibliography
+    filecolor=black,                                % color of file links
+    urlcolor=purple,                                % color of external links
+    linktoc=page                                    % only page is linked
+}%
+\def\myversion{1.0 }
+
+\date{\today}
+\author{} % suppress warning, do not fill this in
+\begin{document}
+
+% we don't use \maketitle because we overide the default title page here
+\begin{titlepage}
+\flushright
+\rule{\textwidth}{5pt}\vskip1cm
+\Huge{SOFTWARE DESIGN DOCUMENT}\\
+\vspace{1.5cm}
+for\\
+\vspace{1.5cm}
+Software Risk Tracker\\
+\vspace{1.5cm}
+\LARGE{Release 1.0\\}
+\vspace{1.5cm}
+\LARGE{Version \myversion approved\\}
+\vspace{1.5cm}
+\footnotesize Prepared by Emily, Reddy, Logan, Nick, Alli, Brandon, Hannah, Josh, and Shelby\\
+\vfill
+\rule{\textwidth}{5pt}
+\end{titlepage}
+
+\tableofcontents
+% this will be automatically created from chapters, sections, and subsections
+
+\listoffigures
+% this will be automatically created from the figure environment
+
+\listoftables
+% this will be automatically created from the table environment
+
+\chapter*{Revision History}
+% Update this table for each revision of the requirements
+% Add the new content followed by a \hline
+
+\begin{tabular}{| c | p{0.60\textwidth} | p{0.30\textwidth} |}
+\hline
+Date     & Description   & Revised by \\
+\hline
+02/4/26 & Initial Baseline & Risk Team \\
+\hline
+\end{tabular}
+
+% What is a Software Design Document (SDD)?
+%
+% Software design is a process by which the software requirements are translated into a representation of software components, interfaces, and data necessary for the implementation phase. The SDD shows how the software system will be structured to satisfy the requirements. It is the primary reference for code development and, therefore, it must contain all the information required by a programmer to write code. The SDD is typically performed in two stages. The first is a preliminary design in which the overall system architecture and data architecture is defined. In the second stage -- i.e., the detailed design stage -- more detailed data structures are defined and algorithms are developed for the defined architecture.
+%
+% This template is an annotated outline for a software design document adapted from the IEEE Recommended Practice for Software Design Descriptions. The IEEE Recommended Practice for Software Design Descriptions have been reduced in order to simplify this assignment while still retaining the main components and providing a general idea.
+%
+
+\chapter{INTRODUCTION}
+
+\section{Purpose}
+
+%Identify the purpose of this SDD and its intended audience. (e.g. ``This software design document describes the architecture and system design of XX ...'').
+This software design document (SDD) describes the architecture and system design of the Software Risk Tracker, a project management web application. The Software Risk Tracker is designed to help users keep track of potential risks for a project. This document is intended for project managers, software engineers, testers, and anyone who collaborates with the software development team.
+
+\section{Scope}
+
+%Provide a description and scope of the software and explain the goals, objectives and benefits of your project. 
+%Note: If you want to add more critical components, please do so.
+The software design document is for a base-level system that will work as a proof of concept for a tool that allows software teams to manage development risks. This Software Design is focused on the base level system and critical parts of the system, by describing the implementation details of the Software Risk Tracker web application. The critical parts include these major components: Risk Management I/O, User Authentication, Notification Handling, and Data Storage.\\
+
+The goals of this document are as follows:\\
+%The spacing here is weird. Will fix later.
+\hspace*{1cm} 1: Outline the architectural design of the system.\\
+\hspace*{1cm} 2: Describe how the data will be processed, stored, and organized. \\
+\hspace*{1cm} 3: Describe the behavior and purpose of each component. \\
+\hspace*{1cm} 4: Detail the design of the user interface.\\
+
+\section{Overview}
+
+%Provide an overview of this document and its organization.
+The Software Design Document is divided into 7 sections with various subsections. The
+sections of the Software Design Document are:\\
+\hspace*{1cm} 1 \;\;Introduction\\
+\hspace*{1cm} 2 \;\;System Overview\\
+\hspace*{1cm} 3 \;\;System Architecture \\
+\hspace*{1cm} 4 \;\;Data Design\\
+\hspace*{1cm} 5 \;\;Component Design\\
+\hspace*{1cm} 6 \;\;Human Interface Design\\
+\hspace*{1cm} 7 \;\;Requirements Traceability Matrix\\
+
+\renewcommand{\bibname}{\section{References}}
+\bibliography{references}
+\bibliographystyle{acm}
+%This section is optional. List any documents, if any, which were used as sources of information.
+%This was a reference we used. Also,  included this here to solve an issue with the definitions table appearing in the wrong spot. If anyone can find a better solution, feel free to change it. 
+%Example-SoftwareDesignDocument-LegalXMLUtility.pdf  
+
+\section{Definitions and Acronyms}
+
+%This section is optional. Provide definitions of all terms, acronyms, and abbreviations that the reader may need to know to properly understand this SDD. These definitions should be items used in the SDD that are most likely not known to the audience.
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c|p{0.6\textwidth}|}
+\hline
+Acronym & Description\\
+\hline
+UI & User Interface \\
+\hline
+API & Application Layer \\
+\hline
+AUM & Authentication and User Management \\
+\hline
+RM & Risk Management \\
+\hline
+SoD & Storage of Data \\
+\hline
+\end{tabular}
+\label{table:acronyms}
+\caption{Acronyms and their descriptions}
+\end{table}
+
+
+
+
+
+\chapter{SYSTEM OVERVIEW}
+The Software Risk Tracker is a web-based multi-user management system designed to help developers record, monitor, and analyze risks associated with their projects.     The system supports creating and managing multiple software projects simultaneously and enables exporting the entire risk list in CSV format for reporting or auditing purposes. 
+
+The system follows a client server architecture and is developed using the C++ programming language
+and implemented with the Webtoolkit (Witty) framework. Users access the application through any web browser. The system supports multiple sessions, allowing different users to view and modify project risks in real time.
+%Give a general description of the functionality, context, and design of your project. Provide any background information if necessary.
+
+
+\chapter{SYSTEM ARCHITECTURE}
+
+\section{Architectural Design}
+
+%Develop a modular program structure and explain the relationships between the modules to achieve the complete functionality of the system. This is a high level overview of how responsibilities of the system are partitioned and then assigned to subsystems. Identify each high level subsystem and the roles or responsibilities assigned to it. Describe how these subsystems collaborate with each other in order to achieve the desired functionality. Don't go into too much detail about the individual subsystems. The main purpose is to gain a general understanding of how and why the system was decomposed, and how the individual parts work together. Provide a diagram showing the major subsystems and data repositories and their interconnections. Refer to and describe the diagram in the narrative.
+The Software Risk Tracker is designed using an object-oriented approach with a model-view architecture: the system is divided into separate modules, each responsible for a specific task. This level of organization makes for an easy to build-upon, maintain, and understand product.
+
+Major subsystems and their responsibilities include:\\
+
+\hspace*{1cm} 1: User Interface (UI) -\\
+    Allows users to view and interact with risks.\\
+    Shows dashboards, risk lists, and forms to create or edit risks .~\cite{wcag21}\\
+
+\hspace*{1cm} 2: Application Layer (API) -\\
+    Handles requests from the UI.\\
+    Processes business rules such as risk storing and validation.\\
+    Sends or retrieves data from the database.~\cite{sei_cert_cpp}\\
+
+\hspace*{1cm} 3: Authentication - \\
+    Ensures that only authorized users can view or modify risks through credential verification.~\cite{levelaccess}\\
+
+    % Note: Elaborate
+    \hspace*{1cm} 4: User Administration - \\
+    Manages creating and deleting user accounts.\\
+    Defines and assigns permissions for admin and regular users.\\
+    Implements inactivity timeouts.~\cite{levelaccess}\\
+
+\hspace*{1cm} 5: Risk Management (RM) - \\
+    Core logic for creating, updating, and tracking risks.\\
+    Maintains the status, priority, and history of risks.~\cite{sei_cert_cpp} ~\cite{ieee}\\
+
+Subsystem dependencies are shown in figure 3.1.\\
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Dependency graph.pdf}
+    \caption{Subsystem interactions}
+    \label{fig:placeholder}
+\end{figure}
+
+%\hspace*{1cm} 5: Notifications - \\
+%    Informs users about any updates and changes related to the risk tracker.
+%Classes like Project, User..
+\hspace*{1cm} 6: Storage of Data (SoD) -\\
+    Includes risk tracker data and account data (usernames, passwords, etc). 
+
+These subsystems work together through these aspects:\\
+ - Users interact with the UI, which sends requests to the API layer.\\
+ - The API calls the Risk Management or User Administration or Authentication modules to process the request.\\
+ - Any data changes are saved in the database.\\%, and notifications are sent if necessary.\\ (Add this back if necessary.)
+%user interface task
+%log in, add a project, create user, create a risk, display matrix, add user to project, remove user from project, edit risk, export project to csv, dashboard nav/menu, confirm any deletion action, 
+
+\section{Decomposition Description}
+%Note: Change from above section.
+
+%Provide a decomposition of each one of the subsystems in the architectural design. You may choose to give a functional description or an object oriented (OO) description. For a functional description use appropriate diagrams such as top-level data flow diagrams (DFD) and structured decomposition diagrams. For an OO description use the appropriate diagrams such as subsysterm model, object diagrams, generalization diagram(s), aggregation diagram(s), interface, and specification diagrams.
+The system is broken down into smaller, easier-to-manage parts including the frontend, backend, and other modules:\\
+
+%Frontend (UI) – Handles user input and shows information.\\
+
+%Backend (API and Services) – Performs the main work of the application.\\
+
+%Risk Management Module – Deals specifically with creating and updating risks.\\
+
+%User and Authentication Module – Handles login, permissions, and user accounts.\\
+
+%Notification Module – Sends messages about risk changes.\\
+
+%Database – Stores all project and risk data.\\
+
+This section details the internal decomposition of the subsystems identified in Section 3.1. It breaks down the architecture into specific C++ classes and database schemas used to implement the system.
+
+\subsection{Object-Oriented Decomposition (Class Structure)}
+The application logic is implemented in C++ using an Object-Oriented approach. Figure 3.2 illustrates how the packages interact. The primary classes and their responsibilities are defined below:
+
+\begin{description}
+    \item[\texttt{RiskTrackerApp}] \hfill \\
+    Inherits from \texttt{Wt::WApplication}. This is the main entry point for the web session. It initializes the UI and manages the life-cycle of the user's session.
+
+    \item[\texttt{UserManager}] \hfill \\
+    Handles authentication logic.
+    \begin{itemize}
+        \item \textbf{Methods:} \texttt{login(username, password)}, \texttt{logout()}, \texttt{createUser()}, \texttt{{idleTimer()}}
+        \item \textbf{Collaborations:} Queries the \texttt{DatabaseManager} to verify credentials.
+    \end{itemize}
+    \item[\texttt{RiskMatrix}] \hfill \\
+    Responsible for the visual and interactive representation of the risk grid. It maps data objects to the user interface and handles the dynamic rendering of the color-coded table.
+    \begin{itemize}
+        \item Methods: \texttt{renderGrid(rows, cols)}, \texttt{assignCellColor(score)}, \texttt{handleCellClick(row, col)}
+        \item Attributes: \texttt{int dimensions}, \texttt{std::vector<RiskItem> displayList}
+        \item Collaborations: Receives data from \texttt{RiskManager} to populate the visual cells; provides the UI component to \texttt{RiskTrackerApp}.
+    \end{itemize}
+    \item[\texttt{RiskManager}] \hfill \\
+    Contains the business logic for calculating risk scores and managing risk lists.
+    \begin{itemize}
+        \item \textbf{Methods:} \texttt{addRisk(RiskItem)}, \texttt{updateRisk(id, RiskItem)}, \texttt{calculateSeverity(prob, impact)}
+        \item \textbf{Collaborations:} Sends data to \texttt{DatabaseManager} for persistence; updates the UI models.
+    \end{itemize}
+
+    \item[\texttt{DatabaseManager}] \hfill \\
+    A single class responsible for all SQLite interactions.
+    \begin{itemize}
+        \item \textbf{Methods:} \texttt{executeQuery(sql)}, \texttt{openDB()}, \texttt{closeDB()}
+        \item \textbf{Attributes:} Holds the \texttt{sqlite3*} connection handle.
+    \end{itemize}
+
+    \item[\texttt{RiskItem} (Data Object)] \hfill \\
+    A plain old data (POD) structure or class representing a single risk.
+    \begin{itemize}
+        \item \textbf{Attributes:} \texttt{int id}, \texttt{std::string title}, \texttt{int probability}, \texttt{int impact}.
+    \end{itemize}
+\end{description}
+    \begin{figure}
+    \centering
+    \includegraphics[width=0.25\linewidth]{Designdoc, package diagram.pdf}
+    \caption{Package Diagram}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Design Doc, User use case.pdf}
+    \caption{User Use Case}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Design Doc, Admin use case.pdf}
+    \caption{Admin Use Case}
+    \label{fig:placeholder}
+\end{figure}
+\subsection{Database Schema Decomposition}
+The system uses a relational database (SQLite). The decomposition of data storage is defined by the following schema tables:
+
+\begin{longtable}{|l|l|l|}
+\hline
+\textbf{Table Name} & \textbf{Column} & \textbf{Type} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Table Name} & \textbf{Column} & \textbf{Type} \\
+\hline
+\endhead
+
+\hline
+\endfoot
+
+\hline
+\endlastfoot
+\texttt{User} & UserID (PK) & INTEGER \\
+               & Name & VARCHAR(30) \\
+               & Email & VARCHAR(30) \\
+               & PasswordHash & TEXT \\
+
+\hline
+\texttt{Role} & UserID (PK) & INTEGER \\
+               & RoleTitle (PK) & VARCHAR(15) \\
+            
+\hline
+\texttt{Project} & ProjectID (PK) & INTEGER \\
+                  & Name & VARCHAR(50) \\
+                  & ImpactCount & INTEGER \\
+                  & ProbCount & INTEGER \\
+                  & Created & TIMESTAMP \\
+                  & Modified & TIMESTAMP \\
+                  
+\hline
+\texttt{Access} & UserID (FK) & INTEGER \\
+               & ProjectID (FK) & INTEGER \\
+                  
+\hline
+\texttt{ScaleLabels} & ScaleID (PK) & INTEGER \\
+                  & ProjectID (FK) & INTEGER \\
+                  & Type & CHARACTER(1) \\
+                  & Name & VARCHAR(20) \\
+                  & Level & INTEGER \\
+                  
+\hline
+\texttt{Risks} & RiskID (PK) & INTEGER \\
+               & ProjectID (FK) & INTEGER \\
+               & Name & VARCHAR(30) \\
+               & Desc & VARCHAR(100) \\
+               & Prob & INTEGER \\
+               & Impact & INTEGER \\
+               
+\hline
+\texttt{AuditLog} & LogID (PK) & INTEGER \\
+                  & Timestamp & TIMESTAMP \\
+                  & Username & VARCHAR(50) \\
+                  & EventType & VARCHAR(15) \\
+                  & EntityType & VARCHAR(15) \\
+                  & Details & TEXT \\
+                  
+\hline
+\end{longtable}
+
+The ERD diagram in figure 3.5 illustrates the relationships between the data tables. Figures 3.3 and 3.4 show two use cases, one for a regular user and one for an admin user. 
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{ERD_Diagram.pdf}
+    \caption{Database ERD}
+    \label{fig:placeholder}
+\end{figure}
+
+Each module interacts in a clear, step-by-step way, so data flows smoothly through the system.\\
+
+\section{Design Rationale}
+
+%Discuss the rationale for selecting the architecture described in the previous section including critical issues and trade/offs that were considered. You may discuss other architectures that were considered, provided that you explain why you didn't choose them.
+Why modular?\\
+Dividing the system into modules makes it easier to understand, test, and update each part separately.\\
+
+Why a database?\\
+All data (users, risks, projects) must be stored reliably. A database keeps the data safe and organized.\\
+
+%Why separate notifications?\\
+%Notifications are not part of the main risk logic, so separating them keeps the system simple.\\
+
+
+\chapter{DATA DESIGN}
+
+\section{Data Description}
+
+%Explain how the information domain of your system is transformed into data structures. Describe how the major data or system entities are stored, processed and organized.
+The Software Risk Tracker employs a relational database model implemented using SQLite to ensure data persistence and integrity. Data is entered via the web interface, processed by the C++ Application Layer, and mapped to internal object structures (User, RiskItem, Project). These objects are then serialized and stored in the SQLite database files. The system utilizes a lightweight schema to minimize overhead while maintaining relationships between Users, Projects, and Risks.
+
+\section{Data Dictionary}
+
+%Alphabetically list the system entities or major data along with their types and descriptions. If you provided a functional description in the ``Decomposition'' Section, list all the functions and function parameters. If you provided an OO description, list the objects and the associated attributes, methods and method parameters.
+
+Label: \\
+\hspace* {1cm} Description: encapsulates all the information corresponding to a level \\
+\hspace*{1cm} label of a given project. \\
+\hspace* {1cm} Attributes: \\
+\hspace*{2cm} Name: String, the name given to identify the level. \\
+\hspace*{2cm} Type: Character, identifies the type of label it is (impact or \\
+\hspace*{2cm} prob.) \\
+\hspace*{2cm} Level: Unisgned integer, identifies the level of the label. \\
+
+
+
+Matrix: \\
+\hspace* {1cm} Description: contains the matrix's chosen dimensions. \\
+\hspace* {1cm} Attributes: \\
+\hspace*{2cm} Probability: Unsigned integer, the total number of probability \\
+\hspace*{2cm} levels.\\
+\hspace*{2cm} Risk: Unsigned integer, the total number of risk levels. \\ 
+
+%Notification: \\
+%\hspace* {1cm} Description: displays a notification's subject and content. \\
+%\hspace* {1cm} Attributes: \\
+%\hspace*{2cm} Subject: String, the notification's subject \\
+%\hspace*{2cm} Desc: String, the information about the subject \\ 
+Project: \\
+\hspace* {1cm} Description: encapsulates all the information corresponding to the \\
+\hspace*{1cm} project. \\
+\hspace* {1cm} Attributes: \\
+\hspace*{2cm} Name: String, the name given to identify the project. \\
+\hspace*{2cm} ImpactCount: Unsigned integer, the number of impact levels. \\
+\hspace*{2cm} ProbCount: Unsigned integer, the number of probability levels. \\
+\hspace*{2cm} Labels: List of Label objects, the level names associated with \\
+\hspace*{2cm} the project. \\
+
+
+
+RiskItem: \\
+\hspace* {1cm} Description: encapsulates all the information corresponding to the \\
+\hspace*{1cm} risk. \\
+\hspace* {1cm} Attributes: \\
+\hspace*{2cm} Name: String, the name given to identify the risk. \\
+\hspace*{2cm} Desc: String, a short description of the risk. \\
+\hspace*{2cm} Prob: Unsigned integer, the probability of the risk occurring.\\
+\hspace*{2cm} Impact: Unsigned integer, the level of impact if the risk occurs.\\ 
+
+UserInfo: \\
+\hspace* {1cm} Description: groups identification information. \\
+\hspace* {1cm} Attributes: \\
+\hspace* {2cm} UserName: String, the username chosen to identify the account. \\
+\hspace* {2cm} Email: String, the email linked to the account. \\
+\hspace* {2cm} Password: String, the password related to the account. 
+
+
+\chapter{COMPONENT DESIGN}
+% MODELING TEAM SECTION
+
+%Give a detailed description of what each component does in a systematic way. If you gave a functional description in ``Decomposition'' section, provide a summary of your algorithm for each function using either a procedural description language (PDL) or pseudocode. If you gave an OO description, summarize each object's member functions for all the objects listed using PDL or pseudocode. Describe any local data when necessary. This section should include enough information for a competent programmer to implement each component. It should NOT be actual code.
+\section{Components}
+
+% ------------------
+% Note for Model Team: Add activity diagrams (control flow), Added by Brandon
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[scale=0.175]{ClassStructure.png}
+    \caption{Overall Class Structuring}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{Project ERD - Page 1 NAVIGATION.png}
+    \caption{User Login/Navigation Control Flow}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{RISKP1.png}
+    \caption{Add Risk Control Flow}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \noindent
+    \ContinuedFloat
+    \centering
+    \includegraphics[width=1.2\linewidth]{RISKP2.png}
+    \caption{Add Risk Control Flow (Continued)}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \noindent
+    \ContinuedFloat
+    \centering
+    \includegraphics[width=1.2\linewidth]{RISKP3.png}
+    \caption{Add Risk Control Flow (Continued)}
+    \label{fig:placeholder}
+\end{figure}
+% ______________________________________________
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{ADMINP1.png}
+    \caption{User Administration Control Flow}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \noindent
+    \ContinuedFloat
+    \centering
+    \includegraphics[width=1.2\linewidth]{ADMINP2.png}
+    \caption{User Administration Control Flow (Continued)}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \noindent
+    \ContinuedFloat
+    \centering
+    \includegraphics[width=1.2\linewidth]{ADMINP3.png}
+    \caption{User Administration Control Flow (Continued)}
+    \label{fig:placeholder}
+\end{figure}
+
+
+
+
+\subsection{User Interface (UI)}
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{UI_Class_Diagram.pdf}
+    \caption{User Interface Class Diagram}
+    \label{fig:placeholder}
+\end{figure}
+Purpose:\\
+The User Interface allows users to view risks, add new ones, and manage projects through a web browser.
+
+Description:\\
+- Displays lists of risks and details about each one.\\
+- Provides forms for adding or editing risks.\\
+- Sends user actions (“add risk” or “login”) to the backend API.\\
+- Receives and displays feedback messages.\\
+
+Pseudocode;\\
+When user opens application:\\
+    Display login screen
+
+If user logs in successfully:\\
+\hspace*{1cm}Show main dashboard\\
+\hspace*{1cm}Display list of all projects\\
+\hspace*{1cm}If user selects a project:\\
+\hspace*{2cm}Display the risk matrix
+
+\hspace*{2cm}When user clicks "Add Risk":\\
+\hspace*{2cm}Open form for new risk\\
+\hspace*{2cm}Send risk data to backend API
+
+\hspace*{2cm}When user clicks "View Risk":\\
+\hspace*{2cm}Request risk details from backend\\
+\hspace*{2cm}Display information on screen\\
+
+\subsection{Application Layer (API)}
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{API.drawio.png}
+    \caption{API Class Diagram}
+    \label{fig:placeholder}
+\end{figure}
+Purpose:\\
+The Application Layer serves as the bridge between the User Interface and the backend logic. It receives requests from the browser, validates the input data to ensure it meets requirements, and routes the request to the appropriate manager (Risk or User).
+
+Description:\\
+- Listens for HTTP requests from the Witty web server.\\
+- Validates user inputs (e.g., checks if risk probability is between 1-5).\\
+- Routes valid requests to the Risk Management or User Management modules.\\
+- Returns success or error messages back to the UI.\\
+
+Pseudocode;\\
+Function handle_request(request_type, data):\\
+\hspace*{1cm} If request_type is "LOGIN":\\
+\hspace*{2cm} return AuthModule.verify_user(data.username, data.password)\\
+\hspace*{1cm} Else If request_type is "ADD_RISK":\\
+\hspace*{2cm} If validate_input(data) is True:\\
+\hspace*{3cm} return RiskModule.add_risk(data)\\
+\hspace*{2cm} Else:\\
+\hspace*{3cm} return "Error: Invalid Input"\\
+
+Function validate_input(data):\\
+\hspace*{1cm} If data.probability < 0 OR data.probability > 5:\\
+\hspace*{2cm} Return False\\
+\hspace*{1cm} Return True\\
+
+% Note for Modeling Team
+\subsection{Authenticator}
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{AuthClass - Page 1.png}
+    \caption{Authenticator Class Diagram}
+    \label{fig:placeholder}
+\end{figure}
+
+
+Purpose:\\
+The Authenticator module handles system security by verifying user identities.
+
+Description:\\
+- Verifies user credentials (username and password) during login.\\
+- Securely hashes passwords before comparing them.\\
+
+Pseudocode:\\
+Function verifyUser(username, inputPassword):\\
+\hspace*{1cm} userPassword = database.findPassword(username)\\
+\hspace*{1cm} hashedPassword = Apply secure_hash to inputPassword\\
+\hspace*{1cm} If userPassword == hashedPassword:\\
+\hspace*{2cm} Return "Valid Credentials"\\
+\hspace*{1cm} Return "Invalid Credentials"\\ 
+
+
+
+\subsection{User Administration}
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{UserAdministrationUML.png}
+    \caption{User Administration Diagram}
+    \label{fig:placeholder}
+\end{figure}
+
+Purpose:\\
+The User Administration module manages user account information.
+
+Description:\\
+- Stores new users' information (username, password, etc.).\\ 
+- Logs important user activities (login, logout, data changes) for security look over.\\
+- Performs inactivity timeouts.
+
+Pseudocode:\\
+Function storeCredentials(name, userName, password,role):\\
+\hspace*{1cm} Create new userID\\
+\hspace*{1cm} database.store(userID, name, userName, password)\\
+\hspace*{1cm} If role == admin:\\
+\hspace*{2cm} roleID = database.find(role)\\
+\hspace*{2cm} database.store(ID, roleID)\\
+\hspace*{1cm} If database.find(userName) is true:\\
+\hspace*{2cm} Return "New user added successfully"\\
+\hspace*{1cm} Return "Error: new user could not be added"
+
+Function logActivity(timestamp, userName, event, entity, details):\\
+\hspace*{1cm} database.store(timestamp, username, event, entity, details)\\
+\hspace*{1cm} Return Successsful
+
+Function inactivityTimeout(userName, time):\\
+\hspace*{1cm} If time is greater than inactivityTimer:\\
+\hspace*{2cm} Logout the user\\
+\hspace*{2cm} Return "Logged out due to inactivity. Log back in."\\
+
+
+\subsection{Risk Management}
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=0.35\linewidth]{Risk Manager.pdf}
+    \caption{Risk Management Diagram}
+    \label{fig:placeholder}
+\end{figure}
+
+Purpose:\\
+- Handles the creation, updating, and tracking of project risks.
+
+Description:\\
+ - Adds new risks to the system.\\
+ - Updates the status, severity, or likelihood of existing risks.\\
+ - Removes risks when resolved.\\
+ - Provides lists and summaries of risks for a project.\\
+
+Pseudocode;\\
+Function addRisk(title, description, severity, likelihood):\\
+    newRisk = createRiskObject(title, description, severity, likelihood)\\
+    database.save(newRisk)\\
+    notifyUsers("New risk added: " + title)\\
+    Return "Risk created successfully"\\
+
+Function updateRisk(riskID, newData):\\
+    risk = database.findRisk(riskID)\\
+    If risk exists:\\
+        Update risk fields with new_data\\
+        database.save(risk)\\
+        Return "Risk updated"\\
+    Else:\\
+        Return "Risk not found"\\
+
+Function listRisks(projectID):\\
+    risks = database.getRisks(projectID)\\
+    Return risks\\
+
+\subsection{Storage of Data}
+
+\begin{figure}[H]
+    \noindent
+    \centering
+    \includegraphics[width=1.2\linewidth]{SOD_Diagram.pdf}
+    \caption{Storage of Data Class Diagram}
+    \label{fig:placeholder}
+\end{figure}
+
+Purpose:\\
+The Storage of Data module, shown in the diagram 5.9 above, acts as the interface between the application logic and the SQLite database, ensuring data is securely saved, retrieved, and exported.
+
+Description:\\
+- Manages the connection to the local SQLite database file.\\
+- Executes SQL queries to insert new Users or Risks into their respective tables.\\
+- Retrieves data rows when requested by other modules.\\
+- Exports project risk data from the database to CSV files.\\
+
+
+
+%Pseudocode;\\
+%Function save_data(table_name, data):\\
+%\hspace*{1cm} db_connection = Open("system_data.db")\\
+%\hspace*{1cm} sql_query = "INSERT INTO " + table_name + " %VALUES " + data\\
+%\hspace*{1cm} Execute sql_query on db_connection\\
+%\hspace*{1cm} Close db_connection\\
+%\hspace*{1cm} Return "Data Saved"\\
+
+%Function get_project_risks(project_id):\\
+%\hspace*{1cm} db_connection = Open("system_data.db")\\
+%\hspace*{1cm} sql_query = "SELECT * FROM Risks WHERE %ProjectID = " + project_id\\
+%\hspace*{1cm} results = Execute sql_query on db_connection\\
+%\hspace*{1cm} Close db_connection\\
+%\hspace*{1cm} Return results\\
+
+\chapter{HUMAN INTERFACE DESIGN}
+
+\section{Overview of User Interface}
+
+%Describe the functionality of the system from the user's perspective. Explain how the user will be able to interact with the system to complete all the expected features and the feedback information that will be displayed for the user. I hannah lanier did this section
+The user will be presented with a login screen where they will enter in their username and password. Then they will be given the option to start a new project or to view past projects. See fig 6.2. If the user selects the new project option they will be able to choose the risk matrix's dimensions and then they will be able to see a matrix you can interact with that is color-coded ranging from green to red. See fig 6.1. The two axes, X and Y will correlate with the likelihood that a risk is to occur and the severity of that risk. See fig 6.1.
+The user can interact with the matrix by clicking on one of the squares within the matrix and then may type the risk name and its description.
+That square will then display the text the user entered. It will save this information for future reference by clicking on the save button. 
+There will also be an edit button for future modifications to the risk matrix shown in fig 6.2.
+
+\section{Screen Designs}
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Login.png}
+    \caption{Risk Tracker Login}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{loginFailure.png}
+    \caption{Risk Tracker Login Fail}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \fbox{\includegraphics[width=1\linewidth]{NonAdminDash.png}}
+    \caption{Non-Admin User Dashboard}
+    \label{fig:placeholder}
+\end{figure}
+
+% change create project options to, Project Name, Probability scale, impact scale. 
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{create pjt.png}
+    \caption{Create Project}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{edit project.png}
+    \caption{Edit project}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{add risk.png}
+    \caption{Add new risk to Matrix}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{edit risk.png}
+    \caption{edit current risk}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{Screenshot 2026-01-20 204844.PNG}
+    \caption{Matrix display}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/Select project.png}
+    \caption{Admin dashboard - select project}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/Confirm delete project.png}
+    \caption{confirm delete Project}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/Add Editor.png}
+    \caption{Add Editor }
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/Delete editor.png}
+    \caption{Remove Editor }
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/confirm delete editor.png}
+    \caption{Confirm remove editor }
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/create user.png}
+    \caption{Create User}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/delete user.png}
+    \caption{Delete User}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure} 
+    \centering
+    \includegraphics[width=1\linewidth]{CS456 UI VIEWS/confirm delete user.png}
+    \caption{Confirm delete user}
+    \label{fig:placeholder}
+\end{figure}
+
+%Show mock-ups of the interface from the user's perspective. These can be hand drawn or you can use a software tool to create illustrations. Just make them as accurate as possible. Graph paper works well when hand drawing the screens.
+
+
+\chapter{REQUIREMENTS TRACEABILITY MATRIX}
+% TESTING TEAM SECTION
+
+%Provide a cross-reference that traces each component and data structure to the requirement(s) in the SRS document. Use a tabular format to show which system components satisfy each one of the functional and non-functional requirements. Refer to the requirements by the number/code used in the SRS document.
+
+%Note from Shelby: I copied all the Nonfunctional requirements over from the SRS document and have added them to the table, as well as added what component/module I thought would satisfy some of them.
+
+%Note from Josh: I finished filling in the table, feel free to correct any module placements that anyone might feel could be changed.
+
+\begin{longtable}{|l|p{0.5\textwidth}|l|}
+\hline
+\textbf{Req. ID} & \textbf{Description} & \textbf{Component} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Req. ID} & \textbf{Description} & \textbf{Component} \\
+\hline
+\endhead
+\hline
+\multicolumn{3}{|r|}{\small\emph{Continued on next page}} \\
+\hline
+\endfoot
+\hline
+\caption{Nonfunctional Requirements and their Corresponding Components}
+\label{table:requirements}
+\endlastfoot
+PERF-1  & The system shall support up to 20 concurrent users while maintaining an average response time for all user actions under 2 seconds. & API Module \\
+\hline
+PERF-2  & The response time to create, edit, or delete a risk shall be less than 2 seconds. & API Module, RM Module \\
+\hline
+PERF-3  & The response time to save user input for a risk (e.g., identifier, description, likelihood) shall be less than 1 second. & API Module \\
+\hline
+PERF-4  & The response time for loading any new page (e.g., dashboard after login, home screen) shall be less than 5 seconds. & API Module, UI Module \\
+\hline
+PERF-5  & The response time to generate a complete risk matrix shall be less than 4 seconds. & API Module, UI Module \\
+\hline
+PERF-6  & The response time to update the risk matrix after a risk is created, edited, or deleted shall be less than 2 seconds. & API Module, RM Module \\
+\hline
+PERF-7  & The time it takes the system to export risk data to CSV shall be less than 2 seconds. & SoD Module \\
+\hline
+SAFE-1  & The system shall require a user to confirm any deletion action. & UI Module \\
+\hline
+SAFE-2  & The system shall automatically log out any user session that has been inactive for 15 minutes. & AUM Module \\
+\hline
+SECU-1  & The system shall require successful user authentication before granting access to any application functionality. & AUM Module \\
+\hline
+SECU-2  & User data shall be securely stored against data loss. & SoD Module \\
+\hline
+SECU-3  & Passwords shall be stored with a secure hashing algorithm. & SoD Module \\
+\hline
+SECU-4  & User activity shall be recorded in a log for the following actions: login, action performed (create, delete, edit), and CSV file exported. & AUM Module \\
+\hline
+SECU-5  & If a user initiates a password reset, the system shall send a time-limited, single-use code to the user's registered email address to facilitate the reset. & AUM Module \\
+\hline
+QUAL-1 & The system shall follow the Mozilla coding style. & Mozilla Coding Style \\
+\hline
+QUAL-2 & The system shall follow the SEI secure coding style. & Cppcheck/Static Analysis \\
+\hline
+QUAL-3 & The system shall meet the accessibility standards provided by WCAG 2.1. & UI Module \\
+\hline
+FUNC-1 & The system shall allow users to create a new project by defining a project name & UI Module, API Module\\
+\hline
+FUNC-2 & The system shall require user authentication (username and password) before granting access to project data & AUM Module\\
+\hline
+FUNC-3 & The system shall allow users to input risk data including a unique Risk Identifier, Description, Likelihood, and Impact. & UI Module, RM Module \\
+\hline
+FUNC-4 & The system shall allow the user to define the dimensions (number of rows and columns) of the risk matrix during project creation & UI Module, API Module\\
+\hline
+FUNC-5 & The system shall store all input data and provide a feature to export the project data as a CSV file & SoD Module\\
+\hline
+FUNC-6 & The system shall display a visual risk matrix table, dynamically color-coded from green to red based on the calculated risk level (Likelihood $\times$ Impact) & UI Module, API Module\\
+\hline
+FUNC-7 & Regular users can access and edit the project information & AUM Module\\
+\hline
+FUNC-8 & Admin users can delete projects, add users to projects, remove users from projects, edit projects, and create and delete users & AUM Module\\
+\hline
+FUNC-9 & The software will comply with WCAG Guidelines. & UI Module\\
+\end{longtable}
+
+%\end{center}
+
+% references
+% uncomment the following 3 lines if you have references
+%\renewcommand{\bibname}{\section{References}}
+%\bibliography{your-bib-filename-without-dot-bib}
+%\bibliographystyle{acm}
+
+\end{document}

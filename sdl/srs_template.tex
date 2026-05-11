@@ -1,0 +1,271 @@
+% CS 455, FA'25 Software Requirements Document template
+% Compile with XeLaTeX or PDFLaTeX
+%
+% Software requirements template based on the template from
+% https://tex.stackexchange.com/questions/42602/software-requirements-specification-with-latex
+%
+\documentclass[letterpaper,12pt,oneside,listof=totoc,parskip=full]{scrreprt}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{underscore}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{graphicx}
+\hypersetup{
+%    bookmarks=false,                                % show bookmarks bar
+    pdftitle={Software Requirements Specification}, % title
+%    pdfauthor={Yiannis Lazarides},                  % author
+%    pdfsubject={TeX and LaTeX},                     % subject of the document
+%    pdfkeywords={TeX, LaTeX, graphics, images},     % list of keywords
+    colorlinks=true,                                % false: boxed links; true: colored links
+    linkcolor=blue,                                 % color of internal links
+    citecolor=black,                                % color of links to bibliography
+    filecolor=black,                                % color of file links
+    urlcolor=purple,                                % color of external links
+    linktoc=page                                    % only page is linked
+}%
+\def\myversion{1.0 }
+
+\date{\today}
+\author{} % suppress warning, do not fill this in
+\begin{document}
+
+% we don't use \maketitle because we overide the default title page here
+\begin{titlepage}
+\flushright
+\rule{\textwidth}{5pt}\vskip1cm
+\Huge{SOFTWARE REQUIREMENTS SPECIFICATION}\\
+\vspace{1.5cm}
+for\\
+\vspace{1.5cm}
+Software Risk Tracker\\                      %%% UPDATE THE TITLE PAGE TEXT
+\vspace{1.5cm}
+\LARGE{Release 1.0\\}
+\vspace{1.5cm}
+\LARGE{Version \myversion approved\\}
+\vspace{1.5cm}
+\footnotesize{Prepared by Emily, Reddy, Logan, Nick, Alli, Brandon, Hannah, Josh, and Shelby}\\
+\vfill
+\rule{\textwidth}{5pt}
+\end{titlepage}
+
+\tableofcontents
+% this will be automatically created from chapters, sections, and subsections
+
+\listoffigures
+% this will be automatically created from the figure environment
+
+
+\chapter*{Revision History}
+% Update this table for each approved baselined revision of the requirements
+% Add the new content followed by a \hline
+
+\begin{tabular}{| c  |p{0.55\textwidth}  |p{0.25\textwidth} |}
+\hline
+Date     & Description   & Revised by \\
+\hline
+ 10/21/25 & Initial & Risk Team \\
+ \hline
+ 01/14/26 & Updated Requirements & Risk Team\\
+\hline
+\end{tabular}
+
+
+
+\chapter{INTRODUCTION}
+
+\section{Purpose}
+% purpose of this document
+This Software Requirements Specification (SRS) document will set the standards for software that will identify and track software project risks.
+
+\section{Document Conventions}
+% how to read this document
+% for example "the follwing conforms to IEEE Standards Style Manual"
+% or "conforms to RFC 2199"
+% which define "shall" "should" "may" and typographic conventions
+This document is separated into 4 sub-sections, with each respective part then split further to thoroughly explain the process of development along with initial, intermediary with remedial steps, and final development stages. It describes an Introduction, Overall Description, Nonfunctional Requirements, as well as Standards and References. Each of the sections and sub-sections will follow the RFC-2119 recommended practices and standards engineering requirements. A Revision History, Table of Contents, and List of Figures is implemented for further clarity.
+
+\section{Acronyms}
+% list of acronyms used in this document that the typical reader won't know
+\begin{tabular}{| c | p{0.60\textwidth} | p{0.30\textwidth} |}
+\hline
+Acronym     & Description \\
+\hline
+ SRS &  Software Requirements Specification\\
+\hline
+ IEEE & Institute of Electrical and Electronics Engineers\\
+ \hline
+ ISO & International Organization for Standardization\\ 
+ \hline
+ IEC & International Electrotechnical Commission\\
+ \hline
+ SEI & Secure Coding Institute\\
+ \hline
+ WCAG & Web Content Accessibility Guideline\\
+ \hline
+\end{tabular}
+
+% Acronyms used in this Software Requirements Specification document include but are not limited to:
+%
+% - SRS : Software Requirements Specification
+%
+% - IEEE : Institute of Electrical and Electronics Engineers
+%
+% - ISO : International Organization for Standardization
+%
+% - IEC : International Electrotechnical Commission
+%
+% - WCAG : Web Content Accessibility Guidelines
+
+
+
+\section{Project Scope}
+% brief, high level description of the software and
+% what is in scope and what is out of scope for the project
+The scope of this project is to build a tool that aids software teams manage risks for their developed software. Risks will be identified, assessed, and tracked using this tool. Each risk will be qualified with a unique identifier, description, likelihood, and impact rating. The key feature of this tool will be the generation of risk matrices to visually represent the severity of risks. To ensure visibility and modification rights are given only to authorized users, access controls will be implemented. Furthermore, other design constraints and security/safety requirements will be within the scope of this project.
+
+Outside the scope of this project will be AI-based features and third-party integrations. 
+
+
+
+\chapter{OVERALL DESCRIPTION}
+
+\section{Product Perspective}
+% background information about the software system to be built
+% what high level problem does it solve and why
+The software is designed to track and display risks for specific teams that are designing software. Users can create projects and store all risk data into our software. Then, based on the information given it will be stored and organized into a risk matrix similar to Figure 1. This is to simplify the view of the risks in order to manage risks.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{5x5-Risk-Matrix.png}
+    \caption{Risk Management Matrix Example}
+    \label{fig:placeholder}
+\end{figure}
+
+\section{Product Features}
+% a detailed list describing software features, NOT CODE
+% may include example screens and reports to illustrate requirements
+% may include activity or other UML diagrams
+% these should be concise, unambiguous and easily testable/verifiable
+The user can create a new project, input risk data into the project, and the risk data is stored and organized into a visual matrix. Users can create a new project that has two levels of access. Those two levels of access will be admin and user. Admin has the ability to access any project on the software, add people to the project, and kick people off projects. Regular users will be able to make projects and edit information of projects they own or have access to. The Software will require the users authentication. The software will require the data on risk such as the following: the risk identifier, description of the risk, likelihood, and impact. The user will provide dimensions of the risk matrix upon creating the project. Once the user has input the matrix size and risk data then the software will store it and output it with a CSV file. The software will then display a table of the risk matrix that is color coded green to red based off likelihood and impact. There must be a user manual provided with the system upon delivery.
+
+FUNC-1: The system shall allow users to create a new project by defining a project name.
+
+FUNC-2: The system shall require user authentication (username and password) before granting access to project data.
+
+FUNC-3: The system shall allow users to input risk data including a unique Risk Identifier, Description, Likelihood, and Impact.
+
+FUNC-4: The system shall allow the user to define the dimensions (number of rows and columns) of the risk matrix during project creation.
+
+FUNC-5: The system shall store all input data and provide a feature to export the project data as a CSV file.
+
+FUNC-6: The system shall display a visual risk matrix table, dynamically color-coded from green to red based on the calculated risk level (Likelihood $\times$ Impact).
+
+FUNC-7: Regular users can access and edit the project information.
+
+FUNC-8: Admin users can delete projects, add users to projects, remove users from projects, edit projects, and create and delete users.
+
+FUNC-9: The software will comply with WCAG Guidelines.
+
+\section{Operating Environment}
+% who are the users?
+% how will they use the system?
+% may include use cases and usage scenarios
+The software's intended users are software developers. It will run on the CS Server and will be accessed through a web browser. The software will comply with WCAG Guidelines. ~\cite{wcag21}
+
+\section{Design and Implementation Constraints}
+% restrictions on the software system design or implementation
+This application must be developed using the C++ programming language and implemented with the Webtoolkit (Witty) framework. Additionally, it must be capable of running on the computer science servers and must support multiple users.
+% specific libraries or technology?
+% diskspace required?
+% RAM required?
+% ??? other ???
+
+\chapter{NONFUNCTIONAL REQUIREMENTS}
+
+\section{Performance Requirements}
+PERF-1:     The system shall support up to 20 concurrent users while maintaining an average response time for all user actions under 2 seconds.
+
+PERF-2:     The response time to create, edit, or delete a risk shall be less than 2 seconds.
+
+PERF-3:     The response time to save user input for a risk (e.g., identifier, description, likelihood) shall be less than 1 second.
+
+PERF-4:     The response time for loading any new page (e.g., dashboard after login, home screen) shall be less than 5 seconds.
+
+PERF-5:     The response time to generate a complete risk matrix shall be less than 4 seconds.
+
+PERF-6:     The response time to update the risk matrix after a risk is created, edited, or deleted shall be less than 2 seconds.
+
+PERF-7:     The time it takes the system to export risk data to CSV shall be less than 2 seconds.
+
+%decent performance response time.
+%PERF-3:     The communication between the CS Server and a web browser shall be efficient and secure. The system should run on the CS Server but be accessible to users via a web browser.
+
+\section{Safety Requirements}
+For the purposes of this system, safety is defined as follows: The system shall not pose any threat to human safety and shall operate in a manner that prevents unauthorized access and unintended loss of data.
+
+SAFE-1:     The system shall require a user to confirm any deletion action.
+
+SAFE-2:     The system shall automatically log out any user session that has been inactive for 15 minutes.
+
+%Do not add these back
+%SAFE-:     If a user is currently inputting risk information and an unforeseen event such as a server crash or user logout occurs, the system shall immediately store the inputted data as a draft.
+%SAFE-4:     The system shall not pose any threat to human safety.
+%
+%SAFE-2:     There shall be a detailed User Manual authored for the system.
+%
+%SAFE-3:     All user data shall be backed up at least once every 24 hours.
+
+\section{Security Requirements}
+
+SECU-1:     The system shall require successful user authentication before granting access to any application functionality.
+
+SECU-2:     User data shall be stored in an SQLite database.
+
+SECU-3:     Will keep a transaction log of changes.
+
+SECU-4:     Passwords shall be stored with a secure hashing algorithm.
+
+SECU-5:     User activity shall be recorded in a log for the following actions: login, action performed (create, delete, edit), and CSV file exported.
+
+SECU-6:     If a user initiates a password reset, the system shall send a time-limited, single-use code to the user's registered email address to facilitate the reset.
+%Must be secure from data theft
+%has to have integrity
+
+\section{Software Quality Attributes}
+
+QUAL-1:     The system shall follow the Mozilla coding style.
+
+QUAL-2:     The system shall follow the SEI secure coding style.
+
+QUAL-3:     The system shall meet the accessibility standards provided by WCAG 2.1.~\cite{wcag21}.
+
+%QUAL-1:     The system shall be business-quality software.
+
+\chapter{STANDARDS AND REFERENCES}
+
+\section{Applicable Standards}
+
+NIST - National Institute of Standards and Technologies
+
+This system shall adhere to the recommended standards set forth by NIST 800-63B-4 on authentication username and passwords.~\cite{nist}
+
+IEEE - Institute of Electrical and Electronics Engineers\\
+This system shall adhere to the recommended standards set forth by the IEEE STD 830-199B.~\cite{IEEE}
+
+Mozilla C++ Code Style Guide
+
+This system shall adhere to the code style set forth by Mozilla.
+
+SEI - Secure Engineering Institute
+
+The system shall adhere to the secure coding style set forth by SEI.~\cite{sei_cert_cpp}
+
+WCAG 2.1 - Web Content Accessibility Guidelines
+
+This system shall meet the accessibility standards set forth by WCAG 2.1~\cite{wcag21,levelaccess}.
+
+% list any external documents cited in this document
+\renewcommand{\bibname}{\section{References}}
+\bibliography{references}
+\bibliographystyle{acm}
+
+\end{document}
