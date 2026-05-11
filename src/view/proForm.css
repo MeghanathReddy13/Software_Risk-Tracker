@@ -1,0 +1,90 @@
+html, 
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f0f0f0;
+    padding-top: 60px;
+}
+
+.form-card {
+    background: #ffffff;
+    padding: 40px;
+    width: 460px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-title {
+    display: block;
+    color: #333333;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 32px;
+}
+
+.form-card .Wt-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 8px;
+    margin-top: 16px;
+}
+
+.form-card .Wt-text:first-of-type {
+    margin-top: 0;
+}
+
+.form-card input[type="text"],
+.form-card input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    margin-bottom: 4px;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-card input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-card button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    background-color: #1e78e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 24px;
+}
+
+.form-card button:hover {
+    background-color: #1663c7;
+}
+
+.form-card button:active {
+    background-color: #1457b3;
+}
+
+/* Prefix text for Software Risk Tracker */
+.prefix-text {
+    color: #000000;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 32px;
+    display: block;
+}

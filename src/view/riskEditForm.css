@@ -1,0 +1,63 @@
+
+.project-title-header {
+    display: block;
+    font-size: 2.2em;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+
+.form-grid-wrapper {
+    display: flex;
+    gap: 40px; 
+    max-width: 1000px;
+}
+
+.form-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+
+.input-card {
+    background: #ffffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f0f0;
+}
+
+.card-label {
+    display: block;
+    font-size: 1.3em;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-input-field {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.save-edit-btn {
+    background-color: #0081cc !important;
+    background-image: none !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 40px !important;
+    border-radius: 30px !important;
+    font-size: 1.1em !important;
+    font-weight: bold !important;
+    margin-top: 40px;
+    cursor: pointer;
+}
+
+.save-edit-btn:hover {
+    background-color: #006699 !important;
+}

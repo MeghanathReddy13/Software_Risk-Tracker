@@ -1,0 +1,70 @@
+.content-display {
+    padding: 20px 40px;
+    background-color: #fdfdfd; 
+}
+
+.project-title-header {
+    display: block;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #000;
+}
+
+.form-grid-wrapper {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 30px; 
+    max-width: 900px;
+}
+
+.form-column {
+    flex: 1;
+    min-width: 400px; 
+    display: flex;
+    flex-direction: column;
+    gap: 30px; 
+}
+
+
+.input-card {
+    background: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+    border: 1px solid #eee;
+}
+
+.card-label {
+    display: block;
+    font-size: 1.4em;
+    font-weight: 400;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+.form-input-field {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 2px 5px;
+    background-color: #fff;
+}
+
+
+.save-edit-btn {
+    background-color: #0081cc !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 45px !important;
+    border-radius: 25px !important; 
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    margin-top: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 129, 204, 0.2);
+}
+
+.save-edit-btn:hover {
+    background-color: #006eb0 !important;
+}
